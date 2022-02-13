@@ -1,4 +1,4 @@
-import { GetMediaQuery } from '../../hooks'
+import { GetMediaQuery } from '../../utils/hooks'
 
 const Title = () => {
   const below850 = GetMediaQuery(850)

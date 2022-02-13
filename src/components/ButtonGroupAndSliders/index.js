@@ -3,7 +3,7 @@ import { Button, ButtonGroup } from '@mui/material'
 import { useState } from 'react'
 import StateManagement from '../../utils/actioncreators'
 import { useSelector } from 'react-redux'
-import { GetMediaQuery } from '../../hooks'
+import { GetMediaQuery } from '../../utils/hooks'
 import '../../style/css/style.css'
 const SlidersGrid = () => {
   //Dispatchers
@@ -26,7 +26,6 @@ const SlidersGrid = () => {
   const [profitPerc, setProfitPerc] = useState(true)
   const [fees, setFees] = useState(false)
   const [feesPerc, setFeesPerc] = useState(false)
-  const below650 = GetMediaQuery(650)
 
   //Component variables
   let changeText = '% Change'
@@ -35,6 +34,8 @@ const SlidersGrid = () => {
   let feesPercText = '% Accrued fees'
 
   //Breakpoint
+  const below650 = GetMediaQuery(650)
+
   if (below650) {
     changeText = '% PnL'
     profitText = '$ PnL'

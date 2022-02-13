@@ -1,26 +1,32 @@
 import { Link } from '@mui/material'
 import { useNavigate } from 'react-router'
 import { useState } from 'react'
-import { IconBrightness } from '../../icons'
+import { IconBrightness } from '../../utils/icons'
 import StateManagement from '../../utils/actioncreators'
 import { useSelector } from 'react-redux'
-import { updateTableValue } from '../../state/action-creators'
 
 const AppBar = () => {
+  //Dispatch
   const { updateBrightness } = StateManagement()
+
+  //State
   const brightness = useSelector((state) => state.brightness)
 
   const navigate = useNavigate()
+  //Hooks
   const [activated, setActivated] = useState('app')
+
+  //Selectors
   const app = document.getElementById('item-1')
   const about = document.getElementById('item-2')
 
-  //display selected menu-item as activated
+  //activate menu-item
   if (activated === 'app' && app) {
     app.style.borderBottom = '2px solid #1976D2'
     about.style.borderBottom = 'none'
   }
 
+  //activate menu-item
   if (activated === 'about' && about) {
     about.style.borderBottom = '2px solid #1976D2'
     app.style.borderBottom = 'none'
@@ -31,7 +37,7 @@ const AppBar = () => {
     document.body.classList.toggle('dark-mode')
     updateBrightness(payload)
 
-    //Fixes issue with table column hover
+    //Fixes issue with table headers hover
     for (let i = 0; i < 18; i++) {
       if (payload === 'dark') {
         if (document.getElementById(`header-month-${i}`)) {

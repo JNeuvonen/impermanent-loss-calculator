@@ -10,10 +10,10 @@ import {
   getPriceChangesForRange,
   getValueToThousands,
   getDarkenedColor,
-} from '../../utils/returns'
+} from '../../utils/functions/returns'
 import GraphDialog from '../Dialog/index.js'
-import { GetMediaQuery } from '../../hooks'
-import { StyledTd } from '../../theme/index'
+import { GetMediaQuery } from '../../utils/hooks'
+import { StyledTd } from '../../style/theme/index'
 import '../../style/css/style.css'
 
 const ImpLossTable = () => {
@@ -43,6 +43,7 @@ const ImpLossTable = () => {
     reversedPrice = true
   }
 
+  //Vars
   let tokens1AtStart = null
   let tokens2AtStart = null
   let t1ChangeHelper = t1Change || t1Change === 0 ? t1Change : 150
@@ -57,7 +58,7 @@ const ImpLossTable = () => {
     1050, 1000, 950, 900, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400, 350,
   ]
 
-  //Tooltips only looked reasonable on desktop/laptop size
+  //Disable tooltips on mobile devices
   const below1050 = GetMediaQuery(1050)
   let toolTipsOn = true
   if (below1050) {
@@ -77,7 +78,6 @@ const ImpLossTable = () => {
   //Cells for table based on T1 and T2 price change
   const cells = getPriceChangesForRange(t1ChangeHelper, t2ChangeHelper)
 
-  //Handle pop-up open
   const handleDialogOpen = (j) => {
     if (brightness === 'dark') {
       document.getElementById(`header-month-${j}`).style.backgroundColor =
@@ -95,7 +95,7 @@ const ImpLossTable = () => {
     setDialogOpen(true)
   }
 
-  //Material UI tooltip
+  //MUI styles
   const StyledTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
@@ -110,9 +110,6 @@ const ImpLossTable = () => {
     },
   }))
 
-  //Days incremented for cell values later
-  let daysIncrement = daysOut / (headers.monthsFmt.length - 1)
-
   //Get token count at start
   if (
     token1Price &&
@@ -125,6 +122,9 @@ const ImpLossTable = () => {
     tokens1AtStart = (capital * (token1Weight / 100)) / token1Price
     tokens2AtStart = (capital * (token2Weight / 100)) / token2Price
   }
+
+  //Var for table
+  let daysIncrement = daysOut / (headers.monthsFmt.length - 1)
 
   return (
     <div className="table-div">

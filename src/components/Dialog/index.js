@@ -5,8 +5,9 @@ import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close'
 import { GraphOnToolTip } from '../Graphs/index'
-import { GetMediaQuery } from '../../hooks'
+import { GetMediaQuery } from '../../utils/hooks'
 
+//MUI styles
 const BootstrapDialogTitle = (props) => {
   const { children, onClose, ...other } = props
 
@@ -31,6 +32,7 @@ const BootstrapDialogTitle = (props) => {
   )
 }
 
+//MUI styles
 BootstrapDialogTitle.propTypes = {
   children: PropTypes.node,
   onClose: PropTypes.func.isRequired,
@@ -48,7 +50,10 @@ const CustomizedDialogs = ({
     setDialogOpen(false)
   }
 
+  //BP
   const mediaQueries = [1050, 1000, 950, 900, 850, 800, 750, 700, 650, 600, 550]
+
+  //Dialog size
   let width = 750
   let height = 350
 

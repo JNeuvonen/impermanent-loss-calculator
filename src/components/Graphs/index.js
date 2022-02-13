@@ -7,18 +7,18 @@ import {
   Legend,
   Area,
 } from 'recharts'
-import { months } from '../../constants/returns'
-import { getPlusAtBeginningOfValue } from '../../utils/returns'
-import { GetMediaQuery } from '../../hooks'
+import { months } from '../../utils/constants/returns'
+import { getPlusAtBeginningOfValue } from '../../utils/functions/returns'
+import { GetMediaQuery } from '../../utils/hooks'
 
 export const GraphOnToolTip = (priceArray, T1Change, T2Change, capital) => {
   //Arr graph
   let data = []
 
-  //Breakpoints
+  //Bp
   const breakpoints = [1050, 1000, 950, 900, 850, 800, 750, 700, 650, 600, 550]
 
-  //Component variables
+  //Vars
   const halfOfCapital = 100 / 2
   const T1DailyRet = Math.pow(T1Change + 1, 1 / priceArray.length)
   const T2DailyRet = Math.pow(T2Change + 1, 1 / priceArray.length)
@@ -48,7 +48,7 @@ export const GraphOnToolTip = (priceArray, T1Change, T2Change, capital) => {
     }
   })
 
-  //Calculate arr ticks
+  //Graph ticks
   for (let i = 0; i < priceArray.length; i++) {
     let tick = {}
     halfForT1 = halfForT1 * T1DailyRet

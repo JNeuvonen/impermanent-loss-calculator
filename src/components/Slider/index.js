@@ -1,8 +1,4 @@
-import { Slider, Box } from '@mui/material'
-import { Typography } from '@mui/material'
-import { useSelector } from 'react-redux'
-import StateManagement from '../../utils/actioncreators'
-import { styled } from '@mui/material/styles'
+import { Slider } from '@mui/material'
 
 export const SliderWrapper = (min, max, text, perc, updaterFunc, sliderVal) => {
   const handleChange = (e, newValue) => {

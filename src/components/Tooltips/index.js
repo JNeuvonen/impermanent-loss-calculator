@@ -3,7 +3,7 @@ import {
   getGreenOrRedColor,
   getPlusAtBeginningOfValue,
   getValueToThousands,
-} from '../../utils/returns'
+} from '../../utils/functions/returns'
 
 const ImpLossTabToolTip = (
   capital,
@@ -25,7 +25,7 @@ const ImpLossTabToolTip = (
 ) => {
   let fontSize = 12.5
 
-  //Component constants
+  //Vars
   const T1PriceAtEnd = (T1Change + 1) * T1PriceAtStart
   const T2PriceAtEnd = (T2Change + 1) * T2PriceAtStart
   const T1PriceChange = (T1PriceAtEnd / T1PriceAtStart) * 100
@@ -33,6 +33,23 @@ const ImpLossTabToolTip = (
   const capitalAtEnd = capital * (endValue / 100 + 1)
   const T1HeldAtEnd = capitalAtEnd / 2 / T1PriceAtEnd
   const T2HeldAtEnd = capitalAtEnd / 2 / T2PriceAtEnd
+
+  //Table headers
+  const headers1 = [
+    'Capital',
+    '% T1 Change',
+    '% T2 Change',
+    'T1 Owned',
+    'T2 Owned',
+  ]
+
+  const headers2 = [
+    '% T1 Owned',
+    '% T2 Owned',
+    'Vs 50/50',
+    'Vs 100% T1',
+    'Vs 100% T2',
+  ]
 
   const getTokenEndPrice = (type) => {
     let endPrice = type === 'T1' ? T1PriceChange - 100 : T2PriceChange - 100
@@ -129,23 +146,6 @@ const ImpLossTabToolTip = (
       </p>
     )
   }
-
-  //Headers
-  const headers1 = [
-    'Capital',
-    '% T1 Change',
-    '% T2 Change',
-    'T1 Owned',
-    'T2 Owned',
-  ]
-
-  const headers2 = [
-    '% T1 Owned',
-    '% T2 Owned',
-    'Vs 50/50',
-    'Vs 100% T1',
-    'Vs 100% T2',
-  ]
 
   return (
     <div>
