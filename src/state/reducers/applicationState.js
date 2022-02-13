@@ -48,6 +48,18 @@ const reducer = (state, action) => {
       return { ...state, apyDecrease: action.payload }
     }
 
+    case 'updateToken1Change': {
+      return { ...state, token1Change: action.payload }
+    }
+
+    case 'updateToken2Change': {
+      return { ...state, token2Change: action.payload }
+    }
+
+    case 'updateBrightness': {
+      return { ...state, brightness: action.payload }
+    }
+
     case 'updateMainformValues': {
       return {
         ...state,
@@ -76,6 +88,9 @@ const reducer = (state, action) => {
         poolSpreadPerc: null,
         tableValue: 'profitPerc',
         apyDecrease: 0,
+        token1Change: 150,
+        token2Change: 30,
+        brightness: 'light',
       }
     }
   }

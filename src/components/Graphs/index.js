@@ -12,7 +12,13 @@ import { getPlusAtBeginningOfValue } from '../../utils/returns'
 import { GetMediaQuery } from '../../hooks'
 
 export const GraphOnToolTip = (priceArray, T1Change, T2Change, capital) => {
+  //Arr graph
   let data = []
+
+  //Breakpoints
+  const breakpoints = [1050, 1000, 950, 900, 850, 800, 750, 700, 650, 600, 550]
+
+  //Component variables
   const halfOfCapital = 100 / 2
   const T1DailyRet = Math.pow(T1Change + 1, 1 / priceArray.length)
   const T2DailyRet = Math.pow(T2Change + 1, 1 / priceArray.length)
@@ -30,7 +36,7 @@ export const GraphOnToolTip = (priceArray, T1Change, T2Change, capital) => {
   const incrementTwo = (targetInMs - dateNowInMs) / priceArray.length
   let year = dateNow.getUTCFullYear()
 
-  const breakpoints = [1050, 1000, 950, 900, 850, 800]
+  //Graph styles
   let width = 700
   let height = 250
   let strokeWidth = 1.2
@@ -38,11 +44,11 @@ export const GraphOnToolTip = (priceArray, T1Change, T2Change, capital) => {
   breakpoints.forEach((px) => {
     if (GetMediaQuery(px)) {
       width -= 41
-      height = Math.floor(width * 0.357)
       strokeWidth -= 0.25
     }
   })
 
+  //Calculate arr ticks
   for (let i = 0; i < priceArray.length; i++) {
     let tick = {}
     halfForT1 = halfForT1 * T1DailyRet
@@ -82,12 +88,12 @@ export const GraphOnToolTip = (priceArray, T1Change, T2Change, capital) => {
     data.push(tick)
   }
 
-  const leftYAxisFormatter = (number) => {
+  const yAxisFormatter = (number) => {
     return getPlusAtBeginningOfValue(number - 100, 0) + '%'
   }
 
   return (
-    <div>
+    <div className="dialog__graph-div">
       {data.length > 1 ? (
         <ComposedChart width={width} height={height} data={data}>
           <defs>
@@ -100,7 +106,7 @@ export const GraphOnToolTip = (priceArray, T1Change, T2Change, capital) => {
           <YAxis
             yAxisId="left"
             orientation="left"
-            tickFormatter={leftYAxisFormatter}
+            tickFormatter={yAxisFormatter}
             stroke="grey"
             fontSize={12}
             domain={[min * 0.99, max * 1.01]}
@@ -146,7 +152,7 @@ export const GraphOnToolTip = (priceArray, T1Change, T2Change, capital) => {
           />
           <Legend />
 
-          <Tooltip formatter={leftYAxisFormatter} />
+          <Tooltip formatter={yAxisFormatter} />
         </ComposedChart>
       ) : (
         'Only one data point available. Look for a date further away.'

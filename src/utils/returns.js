@@ -118,7 +118,7 @@ export function getColorAlgoValue(cellValue) {
 
   cellValue = Math.abs(cellValue)
   if (cellValue === 100) {
-    return { backgroundColor: '#cc2727' }
+    return { backgroundColor: 'rgb(204, 39, 39)' }
   }
 
   return {
@@ -289,4 +289,34 @@ export function getPlusAtBeginningOfValue(val, decimals) {
     ret = String(val.toFixed(decimals))
   }
   return ret
+}
+
+export function getDarkenedColor(color) {
+  let splittedRbgString = String(color['backgroundColor'].split('rgb(')[1])
+
+  splittedRbgString = splittedRbgString.substring(
+    0,
+    splittedRbgString.length - 1
+  )
+  splittedRbgString = splittedRbgString.split(', ')
+
+  let r = Number(splittedRbgString[0])
+  let g = Number(splittedRbgString[1])
+  let b = Number(splittedRbgString[2])
+
+  r -= r * 0.5
+  g -= g * 0.5
+  b -= b * 0.5
+
+  return `rgb(${r}, ${g}, ${b})`
+}
+
+export function getValueToThousands(val) {
+  let ret = val
+
+  if (Math.abs(val) >= 100000) {
+    return (ret = (ret / 1000).toFixed(0) + 'k')
+  }
+
+  return (ret = (ret / 1000).toFixed(1) + 'k')
 }

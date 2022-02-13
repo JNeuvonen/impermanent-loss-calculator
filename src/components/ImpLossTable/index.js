@@ -1,4 +1,3 @@
-import { Typography, Input } from '@mui/material'
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip'
 import { styled } from '@mui/material/styles'
 import { useState } from 'react'
@@ -9,15 +8,16 @@ import {
   getCapitalAfterIL,
   getColorAlgoValue,
   getPriceChangesForRange,
-  getPlusAtBeginningOfValue,
+  getValueToThousands,
+  getDarkenedColor,
 } from '../../utils/returns'
-import { makeStyles } from '@mui/styles'
 import GraphDialog from '../Dialog/index.js'
-import styles from '../../css/app.module.css'
 import { GetMediaQuery } from '../../hooks'
-import { StyledTd, StyledTr } from '../../theme/index'
+import { StyledTd } from '../../theme/index'
+import '../../style/css/style.css'
 
 const ImpLossTable = () => {
+  //State
   let daysOut = useSelector((state) => state.daysOut)
   const token1Price = useSelector((state) => state.token1Price)
   const token2Price = useSelector((state) => state.token2Price)
@@ -27,14 +27,17 @@ const ImpLossTable = () => {
   const apyDecrease = useSelector((state) => state.apyDecrease)
   const capital = useSelector((state) => state.capital)
   const apy = useSelector((state) => state.apy)
+  const t1Change = useSelector((state) => state.token1Change)
+  const t2Change = useSelector((state) => state.token2Change)
+  const brightness = useSelector((state) => state.brightness)
 
-  const [t1Change, setT1Change] = useState()
-  const [t2Change, setT2Change] = useState()
+  //Hooks
   const [t1ForDialog, setT1ForDialog] = useState(null)
   const [t2ForDialog, setT2ForDialog] = useState(null)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [priceArray, setPriceArray] = useState([])
 
+  //Reverse T1/T2 column if T2 > T1
   let reversedPrice = false
   if ((!t1Change && t2Change) || t2Change > t1Change) {
     reversedPrice = true
@@ -47,41 +50,53 @@ const ImpLossTable = () => {
   t1ChangeHelper = t1ChangeHelper < -100 ? -100 : t1ChangeHelper
   t2ChangeHelper = t2ChangeHelper < -100 ? -100 : t2ChangeHelper
 
-  let columns = 18
+  //Columns for table
+  let columns = 17
 
   const mediaQueries = [
-    1050, 1000, 950, 900, 850, 800, 750, 700, 650, 600, 550, 500, 450,
+    1050, 1000, 950, 900, 850, 800, 750, 700, 650, 600, 550, 500, 450, 400, 350,
   ]
 
+  //Tooltips only looked reasonable on desktop/laptop size
   const below1050 = GetMediaQuery(1050)
   let toolTipsOn = true
-
   if (below1050) {
     toolTipsOn = false
   }
 
+  //Reduce table columns based on viewport width
   mediaQueries.forEach((px) => {
     if (GetMediaQuery(px)) {
       columns -= 1
     }
   })
 
+  //Headers for table
   const headers = getHeadersForImpLossTable(daysOut, columns)
+
+  //Cells for table based on T1 and T2 price change
   const cells = getPriceChangesForRange(t1ChangeHelper, t2ChangeHelper)
 
-  const useStyles = makeStyles((theme) => ({
-    tableRow: {
-      '&:hover': {
-        backgroundImage: 'linear-gradient(315deg, #af8c9d 0%, #adadad 50%);',
-      },
-    },
-  }))
+  //Handle pop-up open
+  const handleDialogOpen = (j) => {
+    if (brightness === 'dark') {
+      document.getElementById(`header-month-${j}`).style.backgroundColor =
+        '#425A72'
+      document.getElementById(`header-day-${j}`).style.backgroundColor =
+        '#425A72'
+    }
+    if (brightness === 'light') {
+      document.getElementById(`header-month-${j}`).style.backgroundColor =
+        '#9E9E9E'
+      document.getElementById(`header-day-${j}`).style.backgroundColor =
+        '#9E9E9E'
+    }
 
-  const handleDialogOpen = () => {
     setDialogOpen(true)
   }
 
-  const LightTooltip = styled(({ className, ...props }) => (
+  //Material UI tooltip
+  const StyledTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
     [`& .${tooltipClasses.tooltip}`]: {
@@ -95,8 +110,10 @@ const ImpLossTable = () => {
     },
   }))
 
+  //Days incremented for cell values later
   let daysIncrement = daysOut / (headers.monthsFmt.length - 1)
 
+  //Get token count at start
   if (
     token1Price &&
     token2Price &&
@@ -109,100 +126,49 @@ const ImpLossTable = () => {
     tokens2AtStart = (capital * (token2Weight / 100)) / token2Price
   }
 
-  const classes = useStyles()
-
   return (
-    <div>
-      <table
-        aria-label="a dense table"
-        className={styles.impermanentLossTable}
-        cellSpacing={0}
-      >
+    <div className="table-div">
+      <table cellSpacing={0} className="il-table">
         <thead>
           <tr>
-            <th
-              align="center"
-              style={{ whiteSpace: 'nowrap', background: 'white' }}
-            >
-              Δ T1
-            </th>
-            <th
-              align="center"
-              style={{ whiteSpace: 'nowrap', background: 'white' }}
-            >
-              Δ T2
-            </th>
-            <th
-              align="center"
-              style={{ background: 'white', whiteSpace: 'none' }}
-            >
-              {reversedPrice ? 'T2/T1' : 'T1/T2'}
-            </th>
+            <th></th>
+            <th></th>
+            <th></th>
 
             {headers['monthsFmt'].map((item, index) => {
               return (
                 <th
                   align="center"
-                  id={`header-${index}`}
+                  id={`header-month-${index}`}
                   key={index}
-                  className={classes.tableCell}
-                  style={{
-                    backgroundColor: '#a3a3a3',
-                    borderBottom: '1.3px solid black',
-                  }}
+                  className="il-table__date-th"
                 >
-                  <Typography fontSize={12.5}>{item}</Typography>
+                  <p>{item}</p>
                 </th>
               )
             })}
           </tr>
         </thead>
         <thead>
-          <tr style={{ background: 'white' }}>
-            <th style={{ width: '1vw' }}>
-              <Input
-                name="t1input"
-                label="Standard"
-                placeholder="±150%"
-                onChange={(e) => {
-                  e.preventDefault()
-                  setT1Change(Number(e.target.value))
-                }}
-                variant="standard"
-              />
+          <tr>
+            <th align="center" className="il-table__th">
+              Δ T1
             </th>
-            <th style={{ width: '1vw' }}>
-              <Input
-                name="t2input"
-                label="Standard"
-                placeholder="±30%"
-                onChange={(e) => {
-                  e.preventDefault()
-                  setT2Change(Number(e.target.value))
-                }}
-                variant="standard"
-              />
+            <th align="center" className="il-table__th">
+              Δ T2
             </th>
-            <th
-              align="center"
-              style={{
-                backgroundColor: 'white',
-                border: 'none',
-              }}
-            >
-              {'🤑'}
+            <th align="center" className="il-table__th">
+              {reversedPrice ? 'T2/T1' : 'T1/T2'}
             </th>
             {headers['daysFmt'].map((item, index) => {
               return (
                 <th
                   key={index}
                   align="center"
-                  style={{
-                    backgroundColor: '#f0f0f0',
-                    borderBottom: '1.3px solid #a3a3a3',
-                  }}
+                  className="il-table__date-th"
+                  id={`header-day-${index}`}
                 >
-                  <Typography>{item}</Typography>
+                  <p>{item}</p>
                 </th>
               )
             })}
@@ -211,49 +177,16 @@ const ImpLossTable = () => {
 
         <tbody>
           {cells.map((item_1, i) => {
-            let colorT1 =
-              item_1.T1 === 0 ? 'black' : item_1.T1 > 0 ? 'green' : 'red'
-
-            let colorT2 =
-              item_1.T2 === 0 ? 'black' : item_1.T2 > 0 ? 'green' : 'red'
-
-            let colorT1T2 =
-              item_1.T1T2 === 0 ? 'black' : item_1.T1T2 > 0 ? 'green' : 'red'
-
             return (
-              <StyledTr key={i}>
-                <td
-                  align="center"
-                  style={{
-                    fontWeight: 'bold',
-                    color: colorT1,
-                    position: 'relative',
-                  }}
-                >
-                  {getPlusAtBeginningOfValue(item_1.T1, 0) + '%'}
+              <tr key={i} className="il-table__tr">
+                <td align="center" className="il-table__td side-header">
+                  {item_1.T1.toFixed(0) + '%'}
                 </td>
-                <td
-                  align="center"
-                  style={{
-                    fontWeight: 'bold',
-                    color: colorT2,
-
-                    position: 'relative',
-                  }}
-                >
-                  {getPlusAtBeginningOfValue(item_1.T2, 0) + '%'}
+                <td align="center" className="il-table__td side-header">
+                  {item_1.T2.toFixed(0) + '%'}
                 </td>
-                <td
-                  align="center"
-                  style={{
-                    fontWeight: 'bold',
-                    color: colorT1T2,
-                    height: '10px',
-                    width: '10px',
-                    position: 'relative',
-                  }}
-                >
-                  {getPlusAtBeginningOfValue(item_1.T1T2, 0) + '%'}
+                <td align="center" className="il-table__td side-header">
+                  {item_1.T1T2.toFixed(0) + '%'}
                 </td>
 
                 {headers['daysFmt'].map((item_2, j) => {
@@ -322,15 +255,16 @@ const ImpLossTable = () => {
                     }
                   }
 
+                  //Get cell background color based on cellvalue
                   let color = getColorAlgoValue(colorHelper.toFixed(0))
-
+                  let darkenedColor = getDarkenedColor(color)
                   const hoverColor =
                     endValue >= 0
                       ? 'linear-gradient(315deg, #00b712 0%, #5aff15 74%);'
                       : 'linear-gradient(147deg, #990000 0%, #ff0000 74%);'
 
                   return toolTipsOn ? (
-                    <LightTooltip
+                    <StyledTooltip
                       key={j}
                       title={ToolTipText(
                         capital,
@@ -354,29 +288,71 @@ const ImpLossTable = () => {
                       <StyledTd
                         align="center"
                         color={color.backgroundColor}
-                        hoverColor={hoverColor}
+                        hoverColor={darkenedColor}
+                        onMouseEnter={() => {
+                          if (brightness === 'light') {
+                            document.getElementById(
+                              `header-month-${j}`
+                            ).style.backgroundColor = `#d1d1d1`
+                            document.getElementById(
+                              `header-day-${j}`
+                            ).style.backgroundColor = `#d1d1d1`
+                          }
+
+                          if (brightness === 'dark') {
+                            document.getElementById(
+                              `header-day-${j}`
+                            ).style.backgroundColor = '#0A0E12'
+                            document.getElementById(
+                              `header-month-${j}`
+                            ).style.backgroundColor = '#0A0E12'
+                          }
+                        }}
+                        onMouseLeave={() => {
+                          if (brightness === 'light') {
+                            document.getElementById(
+                              `header-month-${j}`
+                            ).style.backgroundColor = '#9E9E9E'
+                            document.getElementById(
+                              `header-day-${j}`
+                            ).style.backgroundColor = '#9E9E9E'
+                          }
+
+                          if (brightness === 'dark') {
+                            document.getElementById(
+                              `header-month-${j}`
+                            ).style.backgroundColor = '#425A72'
+                            document.getElementById(
+                              `header-day-${j}`
+                            ).style.backgroundColor = '#425A72'
+                          }
+                        }}
                         onClick={(e) => {
                           e.preventDefault()
-                          handleDialogOpen()
+                          handleDialogOpen(j)
+
                           setPriceArray(profitForLp['priceArray'])
                           setT1ForDialog(item_1.T1 / 100)
                           setT2ForDialog(item_1.T2 / 100)
                         }}
                       >
-                        <Typography style={{ fontSize: 12 }}>
-                          {endValue}
+                        <p className="il-table__td">
+                          {tableValue === 'profit' || tableValue === 'fees'
+                            ? getValueToThousands(endValue)
+                            : endValue}
                           {tableValue === 'profitPerc' ||
                           tableValue === 'feesPerc'
                             ? '%'
                             : null}
-                        </Typography>
+                        </p>
                       </StyledTd>
-                    </LightTooltip>
+                    </StyledTooltip>
                   ) : (
                     <StyledTd
                       align="center"
                       color={color.backgroundColor}
                       hoverColor={hoverColor}
+                      key={j}
                       onClick={(e) => {
                         e.preventDefault()
                         handleDialogOpen()
@@ -385,17 +361,19 @@ const ImpLossTable = () => {
                         setT2ForDialog(item_1.T2 / 100)
                       }}
                     >
-                      <Typography style={{ fontSize: 12 }}>
-                        {endValue}
+                      <p className="il-table__td">
+                        {tableValue === 'profit' || tableValue === 'fees'
+                          ? getValueToThousands(endValue)
+                          : endValue}
                         {tableValue === 'profitPerc' ||
                         tableValue === 'feesPerc'
                           ? '%'
                           : null}
-                      </Typography>
+                      </p>
                     </StyledTd>
                   )
                 })}
-              </StyledTr>
+              </tr>
             )
           })}
         </tbody>

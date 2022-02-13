@@ -1,15 +1,4 @@
-import { makeStyles } from '@mui/styles'
 import styled from 'styled-components'
-
-export const StyledTr = styled.tr`
-  background-color: #f0f0f0;
-  border-bottom: 3px solid #7a7a7a;
-  border-top: 3px solid #7a7a7a;
-  position: relative;
-  &: hover {
-    background-image: linear-gradient(315deg, #af8c9d 50%, #adadad 50%);
-  }
-`
 
 export const StyledTd = styled.td.attrs((props) => ({
   style: {
@@ -20,6 +9,7 @@ export const StyledTd = styled.td.attrs((props) => ({
 }))`
   &: hover {
     cursor: pointer;
-    background-image: ${(props) => props.hoverColor};
+    color: #fff !important;
+    background-color: ${(props) => props.hoverColor} !important;
   }
 `

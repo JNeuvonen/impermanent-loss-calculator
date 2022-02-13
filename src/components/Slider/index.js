@@ -2,66 +2,32 @@ import { Slider, Box } from '@mui/material'
 import { Typography } from '@mui/material'
 import { useSelector } from 'react-redux'
 import StateManagement from '../../utils/actioncreators'
-import styles from '../../css/app.module.css'
+import { styled } from '@mui/material/styles'
 
-export const SliderWrapper = (min, max, text, perc) => {
-  const { updateDaysOut, updateRange, updateApyDecrease } = StateManagement()
-  const daysOut = useSelector((state) => state.daysOut)
-  const range = useSelector((state) => state.range)
-  const apyDecrease = useSelector((state) => state.apyDecrease)
-  let sliderVal = null
-
-  let updaterFunc = null
-  if (text === 'DAYS:') {
-    sliderVal = daysOut
-    updaterFunc = updateDaysOut
-    if (!sliderVal) {
-      sliderVal = 365
-    }
-  }
-
-  if (text === 'REDUCE APY ANNUALLY BY: ') {
-    sliderVal = apyDecrease
-    updaterFunc = updateApyDecrease
-    if (!sliderVal) {
-      sliderVal = 0
-    }
-  }
-
-  if (text === 'CHART RANGE: ±') {
-    sliderVal = range
-    updaterFunc = updateRange
-    if (!sliderVal) {
-      sliderVal = 150
-    }
-  }
-
+export const SliderWrapper = (min, max, text, perc, updaterFunc, sliderVal) => {
   const handleChange = (e, newValue) => {
     e.preventDefault()
     updaterFunc(newValue)
   }
+
   return (
     <div>
-      <div style={{ display: 'flex' }}>
-        <Typography style={{ fontSize: '1rem' }}>{text} </Typography>
-        <Typography
-          style={{ fontWeight: 'bold', marginLeft: 5, fontSize: '1rem' }}
-        >
-          {sliderVal}
-          {perc}
-        </Typography>
-      </div>
+      <span className="bottom-inputs-grid__sliders__slider-txt">
+        {text + ' '}
+        <span style={{ fontWeight: 'bold' }}> {sliderVal}</span>
+        {perc}
+      </span>
 
-      <Box className={styles.sliderBox}>
-        <Slider
-          aria-label="Default"
-          value={sliderVal}
-          valueLabelDisplay="auto"
-          min={min}
-          max={max}
-          onChange={handleChange}
-        />
-      </Box>
+      <Slider
+        aria-label="Default"
+        value={sliderVal}
+        valueLabelDisplay="auto"
+        className="bottom-inputs-grid__slider"
+        min={min}
+        max={max}
+        onChange={handleChange}
+        sx={{ color: '#0a88f4' }}
+      />
     </div>
   )
 }

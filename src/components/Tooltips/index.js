@@ -1,8 +1,8 @@
-import { Typography } from '@mui/material'
 import {
   getDecimals,
   getGreenOrRedColor,
   getPlusAtBeginningOfValue,
+  getValueToThousands,
 } from '../../utils/returns'
 
 const ImpLossTabToolTip = (
@@ -25,6 +25,7 @@ const ImpLossTabToolTip = (
 ) => {
   let fontSize = 12.5
 
+  //Component constants
   const T1PriceAtEnd = (T1Change + 1) * T1PriceAtStart
   const T2PriceAtEnd = (T2Change + 1) * T2PriceAtStart
   const T1PriceChange = (T1PriceAtEnd / T1PriceAtStart) * 100
@@ -39,11 +40,9 @@ const ImpLossTabToolTip = (
     endPrice = getPlusAtBeginningOfValue(endPrice, 0)
 
     return (
-      <Typography
-        style={{ fontSize: fontSize, color: color, fontWeight: 'bold' }}
-      >
+      <p className="tooltip-table__td" style={{ color }}>
         {endPrice}%
-      </Typography>
+      </p>
     )
   }
 
@@ -51,11 +50,9 @@ const ImpLossTabToolTip = (
     const color = getGreenOrRedColor(capitalAtEnd, capital, 'black')
     const decimals = getDecimals(capitalAtEnd)
     return (
-      <Typography
-        style={{ fontSize: fontSize, color: color, fontWeight: 'bold' }}
-      >
-        {capitalAtEnd.toFixed(decimals)}$
-      </Typography>
+      <p className="tooltip-table__td" style={{ color }}>
+        {getValueToThousands(capitalAtEnd.toFixed(decimals))}
+      </p>
     )
   }
 
@@ -66,12 +63,12 @@ const ImpLossTabToolTip = (
     const decimals = getDecimals(tokensAtEnd)
     const retIsNan = isNaN(tokensAtEnd)
     if (retIsNan) {
-      return <Typography>💩</Typography>
+      return <p>💩</p>
     }
     return (
-      <Typography style={{ fontSize: fontSize, fontWeight: 'bold', color }}>
+      <p className="tooltip-table__td" style={{ color }}>
         {tokensAtEnd.toFixed(decimals)}
-      </Typography>
+      </p>
     )
   }
 
@@ -92,14 +89,13 @@ const ImpLossTabToolTip = (
     }
 
     return (
-      <Typography style={{ fontSize: fontSize, fontWeight: 'bold', color }}>
+      <p className="tooltip-table__td" style={{ color }}>
         {ret}
-      </Typography>
+      </p>
     )
   }
 
   const getPerfVs5050 = () => {
-    //console.log(T1AtStart, T2AtStart, T1PriceAtEnd, T2PriceAtEnd, capital)
     let perfOf5050 =
       ((T1AtStart * T1PriceAtEnd + T2AtStart * T2PriceAtEnd) / capital) * 100 -
       100
@@ -111,9 +107,9 @@ const ImpLossTabToolTip = (
     ret = getPlusAtBeginningOfValue(ret, 0)
 
     return (
-      <Typography style={{ fontSize: fontSize, fontWeight: 'bold', color }}>
+      <p className="tooltip-table__td" style={{ color }}>
         {ret}%
-      </Typography>
+      </p>
     )
   }
 
@@ -125,19 +121,16 @@ const ImpLossTabToolTip = (
     const retIsNan = isNaN(ret)
 
     if (retIsNan) {
-      return (
-        <Typography style={{ fontSize: fontSize, fontWeight: 'bold', color }}>
-          0
-        </Typography>
-      )
+      return <p className="tooltip-table__td">0</p>
     }
     return (
-      <Typography style={{ fontSize: fontSize, fontWeight: 'bold', color }}>
+      <p className="tooltip-table__td" style={{ color }}>
         {ret}%
-      </Typography>
+      </p>
     )
   }
 
+  //Headers
   const headers1 = [
     'Capital',
     '% T1 Change',
@@ -155,19 +148,15 @@ const ImpLossTabToolTip = (
   ]
 
   return (
-    <div style={{ width: '100%', minHeight: '100%' }}>
-      <div
-        style={{
-          width: '100%',
-        }}
-      >
+    <div>
+      <div>
         <table cellSpacing={15}>
           <thead>
             <tr>
               {headers1.map((item) => {
                 return (
                   <th key={item}>
-                    <Typography fontSize={fontSize}>{item}</Typography>
+                    <p fontSize={fontSize}>{item}</p>
                   </th>
                 )
               })}
@@ -189,7 +178,7 @@ const ImpLossTabToolTip = (
               {headers2.map((item) => {
                 return (
                   <th key={item}>
-                    <Typography fontSize={fontSize}>{item}</Typography>
+                    <p fontSize={fontSize}>{item}</p>
                   </th>
                 )
               })}

@@ -1,15 +1,18 @@
-import { Typography } from '@mui/material'
 import { GetMediaQuery } from '../../hooks'
 
 const Title = () => {
   const below850 = GetMediaQuery(850)
   let titleText = 'Impermanent Loss Calculator and Visualizer'
+
   if (below850) {
     titleText = 'Impermanent Loss Calculator'
   }
+
   return (
-    <div style={{ marginBottom: '2.5vh', color: '#003f75' }}>
-      <Typography variant="h5">{titleText}</Typography>
+    <div className="app-title">
+      <h1 variant="h5" className="app-title__title">
+        {titleText}
+      </h1>
     </div>
   )
 }

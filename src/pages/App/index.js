@@ -2,16 +2,15 @@ import ImpLossTable from '../../components/ImpLossTable'
 import ButtonGroupWrapper from '../../components/ButtonGroupAndSliders'
 import InputsForm from '../../components/InputsForm'
 import AppTitle from '../../components/AppTitle'
-import styles from '../../css/app.module.css'
+import '../../style/css/style.css'
+
 const AppWrapper = () => {
   return (
-    <div>
-      <div className={styles.content}>
-        <AppTitle />
-        <InputsForm />
-        <ImpLossTable />
-        <ButtonGroupWrapper />
-      </div>
+    <div className="app-content">
+      <AppTitle />
+      <InputsForm />
+      <ImpLossTable />
+      <ButtonGroupWrapper />
     </div>
   )
 }

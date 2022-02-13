@@ -2,11 +2,11 @@ import AppBar from './components/Appbar'
 import AppPage from './pages/App'
 import About from './pages/About'
 import { Routes, Route } from 'react-router-dom'
-import styles from './css/app.module.css'
+import './style/css/style.css'
 
 function App() {
   return (
-    <div className={styles.appDiv}>
+    <div>
       <AppBar />
       <Routes>
         <Route path="/" element={<AppPage />} />

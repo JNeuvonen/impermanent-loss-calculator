@@ -1,41 +1,45 @@
 import Slider from '../Slider'
-import Stack from '@mui/material/Stack'
-import { Button, ButtonGroup, Paper, Typography } from '@mui/material'
+import { Button, ButtonGroup } from '@mui/material'
 import { useState } from 'react'
 import StateManagement from '../../utils/actioncreators'
-import styles from '../../css/app.module.css'
+import { useSelector } from 'react-redux'
 import { GetMediaQuery } from '../../hooks'
+import '../../style/css/style.css'
 const SlidersGrid = () => {
-  const { updateTableValue } = StateManagement()
+  //Dispatchers
+  const {
+    updateTableValue,
+    updateDaysOut,
+    updateApyDecrease,
+    updateToken1Change,
+    updateToken2Change,
+  } = StateManagement()
+
+  //State
+  const daysOut = useSelector((state) => state.daysOut)
+  const apyDecrease = useSelector((state) => state.apyDecrease)
+  const token1Change = useSelector((state) => state.token1Change)
+  const token2Change = useSelector((state) => state.token2Change)
+
+  //Hooks
   const [profit, setProfit] = useState(false)
   const [profitPerc, setProfitPerc] = useState(true)
   const [fees, setFees] = useState(false)
   const [feesPerc, setFeesPerc] = useState(false)
-
   const below650 = GetMediaQuery(650)
-  const below1050 = GetMediaQuery(1050)
 
-  const fontSize = '1rem'
-  let direction = 'row'
+  //Component variables
   let changeText = '% Change'
   let profitText = '$ Profit'
   let feesText = '$ Accrued fees'
   let feesPercText = '% Accrued fees'
-  let marginLeft = 0
-  let columnSpacing = 3.5
 
-  if (below1050) {
-    marginLeft = '1vw'
-  }
-
+  //Breakpoint
   if (below650) {
-    direction = 'column'
     changeText = '% PnL'
     profitText = '$ PnL'
     feesText = '$ Fees'
     feesPercText = '% Fees'
-    columnSpacing = 0
-    marginLeft = '10vw'
   }
 
   const enableButton = (type, enabledButton, restOfButtons) => {
@@ -45,187 +49,103 @@ const SlidersGrid = () => {
   }
 
   return (
-    <div className={styles.buttonGroupBar}>
-      <Stack
-        direction={direction}
-        spacing={columnSpacing}
-        marginLeft={marginLeft}
-      >
-        {Slider(50, 1095, 'DAYS:', null)}
-        {Slider(0, 99, 'REDUCE APY ANNUALLY BY: ', '%')}
-      </Stack>
-      {below650 ? (
-        <div>
-          <ButtonGroup
-            orientation="vertical"
-            style={{ position: 'relative', marginLeft: '22vw' }}
-          >
-            <Button
-              onClick={(e) => {
-                enableButton('profitPerc', setProfitPerc, [
-                  setProfit,
-                  setFees,
-                  setFeesPerc,
-                ])
-              }}
-              className={styles.buttonGroupButton}
-              variant={profitPerc ? 'contained' : 'outlined'}
-            >
-              <Typography
-                style={{
-                  color: profitPerc ? 'white' : 'black',
-                  fontSize,
-                }}
-              >
-                {changeText}
-              </Typography>
-            </Button>
-            <Button
-              variant={fees ? 'contained' : 'outlined'}
-              className={styles.buttonGroupButton}
-              onClick={(e) => {
-                enableButton('fees', setFees, [
-                  setProfit,
-                  setProfitPerc,
-                  setFeesPerc,
-                ])
-              }}
-            >
-              <Typography
-                style={{
-                  fontSize,
-                  color: fees ? 'white' : 'black',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {feesText}
-              </Typography>
-            </Button>
-          </ButtonGroup>
-          <ButtonGroup orientation="vertical">
-            <Button
-              variant={profit ? 'contained' : 'outlined'}
-              className={styles.buttonGroupButton}
-              onClick={(e) => {
-                enableButton('profit', setProfit, [
-                  setProfitPerc,
-                  setFees,
-                  setFeesPerc,
-                ])
-              }}
-            >
-              <Typography
-                style={{ color: profit ? 'white' : 'black', fontSize }}
-              >
-                {profitText}
-              </Typography>
-            </Button>
+    <div className="bottom-inputs-grid">
+      <div className="bottom-inputs-grid__slider1">
+        {Slider(
+          -100,
+          1095,
+          'TOKEN 1 PRICE Δ: ±',
+          '%',
+          updateToken1Change,
+          token1Change
+        )}
+      </div>
+      <div className="bottom-inputs-grid__slider2">
+        {Slider(
+          -100,
+          1095,
+          'TOKEN 2 PRICE Δ: ±',
+          '%',
+          updateToken2Change,
+          token2Change
+        )}
+      </div>
+      <div className="bottom-inputs-grid__slider3">
+        {Slider(50, 1095, 'DAYS:', null, updateDaysOut, daysOut)}
+      </div>
+      <div className="bottom-inputs-grid__slider4">
+        {Slider(
+          0,
+          99,
+          'REDUCE APY ANNUALLY BY: ',
+          '%',
+          updateApyDecrease,
+          apyDecrease
+        )}
+      </div>
+      <ButtonGroup className="bottom-inputs-grid__btn-group">
+        <Button
+          className="bottom-inputs-grid__btn-group__btn"
+          onClick={(e) => {
+            enableButton('profitPerc', setProfitPerc, [
+              setProfit,
+              setFees,
+              setFeesPerc,
+            ])
+          }}
+          variant={profitPerc ? 'contained' : 'outlined'}
+        >
+          <p className="bottom-inputs-grid__btn-group__btn__btn-text">
+            {changeText}
+          </p>
+        </Button>
+        <Button
+          variant={profit ? 'contained' : 'outlined'}
+          className="bottom-inputs-grid__btn-group__btn"
+          onClick={(e) => {
+            enableButton('profit', setProfit, [
+              setProfitPerc,
+              setFees,
+              setFeesPerc,
+            ])
+          }}
+        >
+          <p className="bottom-inputs-grid__btn-group__btn__btn-text">
+            {profitText}
+          </p>
+        </Button>
 
-            <Button
-              variant={feesPerc ? 'contained' : 'outlined'}
-              className={styles.buttonGroupButton}
-              onClick={(e) => {
-                enableButton('feesPerc', setFeesPerc, [
-                  setProfit,
-                  setProfitPerc,
-                  setFees,
-                ])
-              }}
-            >
-              <Typography
-                style={{
-                  fontSize,
-                  color: feesPerc ? 'white' : 'black',
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                {feesPercText}
-              </Typography>
-            </Button>
-          </ButtonGroup>
-        </div>
-      ) : (
-        <ButtonGroup>
-          <Button
-            onClick={(e) => {
-              enableButton('profitPerc', setProfitPerc, [
-                setProfit,
-                setFees,
-                setFeesPerc,
-              ])
-            }}
-            className={styles.buttonGroupButton}
-            variant={profitPerc ? 'contained' : 'outlined'}
-          >
-            <Typography
-              style={{
-                color: profitPerc ? 'white' : 'black',
-                fontSize,
-              }}
-            >
-              {changeText}
-            </Typography>
-          </Button>
-          <Button
-            variant={profit ? 'contained' : 'outlined'}
-            className={styles.buttonGroupButton}
-            onClick={(e) => {
-              enableButton('profit', setProfit, [
-                setProfitPerc,
-                setFees,
-                setFeesPerc,
-              ])
-            }}
-          >
-            <Typography style={{ color: profit ? 'white' : 'black', fontSize }}>
-              {profitText}
-            </Typography>
-          </Button>
-
-          <Button
-            variant={fees ? 'contained' : 'outlined'}
-            className={styles.buttonGroupButton}
-            onClick={(e) => {
-              enableButton('fees', setFees, [
-                setProfit,
-                setProfitPerc,
-                setFeesPerc,
-              ])
-            }}
-          >
-            <Typography
-              style={{
-                fontSize,
-                color: fees ? 'white' : 'black',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {feesText}
-            </Typography>
-          </Button>
-          <Button
-            variant={feesPerc ? 'contained' : 'outlined'}
-            className={styles.buttonGroupButton}
-            onClick={(e) => {
-              enableButton('feesPerc', setFeesPerc, [
-                setProfit,
-                setProfitPerc,
-                setFees,
-              ])
-            }}
-          >
-            <Typography
-              style={{
-                fontSize,
-                color: feesPerc ? 'white' : 'black',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {feesPercText}
-            </Typography>
-          </Button>
-        </ButtonGroup>
-      )}
+        <Button
+          variant={fees ? 'contained' : 'outlined'}
+          className="bottom-inputs-grid__btn-group__btn"
+          onClick={(e) => {
+            enableButton('fees', setFees, [
+              setProfit,
+              setProfitPerc,
+              setFeesPerc,
+            ])
+          }}
+        >
+          <p className="bottom-inputs-grid__btn-group__btn__btn-text">
+            {feesText}
+          </p>
+        </Button>
+        <Button
+          className="bottom-inputs-grid__btn-group__btn"
+          variant={feesPerc ? 'contained' : 'outlined'}
+          onClick={(e) => {
+            enableButton('feesPerc', setFeesPerc, [
+              setProfit,
+              setProfitPerc,
+              setFees,
+            ])
+          }}
+        >
+          <p className="bottom-inputs-grid__btn-group__btn__btn-text">
+            {feesPercText}
+          </p>
+        </Button>
+      </ButtonGroup>
     </div>
   )
 }

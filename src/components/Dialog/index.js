@@ -1,4 +1,3 @@
-import * as React from 'react'
 import PropTypes from 'prop-types'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -49,14 +48,13 @@ const CustomizedDialogs = ({
     setDialogOpen(false)
   }
 
-  const mediaQueries = [1050, 1000, 950, 900, 850, 800]
+  const mediaQueries = [1050, 1000, 950, 900, 850, 800, 750, 700, 650, 600, 550]
   let width = 750
-  let height = 650
+  let height = 350
 
   mediaQueries.forEach((px) => {
     if (GetMediaQuery(px)) {
       width -= 41
-      height -= 60
     }
   })
 
@@ -67,17 +65,11 @@ const CustomizedDialogs = ({
         aria-labelledby="customized-dialog-title"
         open={dialogOpen}
         PaperProps={{
-          sx: {
-            minHight: height,
-            minWidth: width,
-          },
+          sx: { minWidth: width, minHeight: height },
         }}
+        className="dialog"
       >
-        <DialogTitle
-          id="customized-dialog-title"
-          onClose={handleClose}
-          style={{ textAlign: 'center' }}
-        >
+        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           <IconButton
             aria-label="close"
             onClick={handleClose}
@@ -92,14 +84,8 @@ const CustomizedDialogs = ({
           </IconButton>
           % PnL
         </DialogTitle>
-        <DialogContent dividers style={{ overflow: 'hidden' }}>
-          <div
-            style={{
-              position: 'relative',
-            }}
-          >
-            {GraphOnToolTip(priceArray, T1Change, T2Change, capital)}
-          </div>
+        <DialogContent dividers>
+          <div>{GraphOnToolTip(priceArray, T1Change, T2Change, capital)}</div>
         </DialogContent>
       </Dialog>
     </div>

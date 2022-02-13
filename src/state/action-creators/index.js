@@ -132,3 +132,30 @@ export const updateApyDecrease = (data) => {
     })
   }
 }
+
+export const updateToken1Change = (data) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'updateToken1Change',
+      payload: data,
+    })
+  }
+}
+
+export const updateToken2Change = (data) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'updateToken2Change',
+      payload: data,
+    })
+  }
+}
+
+export const updateBrightness = (data) => {
+  return (dispatch) => {
+    dispatch({
+      type: 'updateBrightness',
+      payload: data,
+    })
+  }
+}

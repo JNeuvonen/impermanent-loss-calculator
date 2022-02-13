@@ -19,6 +19,9 @@ const StateManagement = () => {
     updateMainformValues,
     updateTableValue,
     updateApyDecrease,
+    updateToken1Change,
+    updateToken2Change,
+    updateBrightness,
   } = bindActionCreators(actionCreators, dispatch)
 
   return {
@@ -36,6 +39,9 @@ const StateManagement = () => {
     updateMainformValues,
     updateTableValue,
     updateApyDecrease,
+    updateToken1Change,
+    updateToken2Change,
+    updateBrightness,
   }
 }
 

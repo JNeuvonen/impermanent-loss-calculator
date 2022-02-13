@@ -1,0 +1,45 @@
+@import 'app';
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+:root {
+  --clr-title-font: #003f75;
+  --clr-input-label: #177cff;
+  --clr-th: #9e9e9e;
+  --clr-date-th: #cecece;
+  --clr-text: none;
+  --clr-svg: black;
+  --clr-tr: #f0f0f0;
+  --clr-secondary-tr-hover: grey;
+}
+.dark-mode {
+  --clr-primary: #1c2229;
+  --clr-secondary: #2b3a4a;
+  --clr-secondary-hover: #263342;
+  --clr-secondary-tr-hover: #0a0e12;
+  --clr-btn: #0a88f4;
+  --clr-text: #fff;
+  --clr-svg: #fff;
+  --clr-title-font: #0a88f4;
+  --clr-input-label: #e6e6e6;
+  --clr-th: #425a72;
+  --clr-tr: #2b3a4a;
+}
+
+html {
+  font-size: 10px;
+  font-family: sans-serif;
+  @media only screen and (max-width: $bp1030) {
+    font-size: 9px;
+  }
+}
+
+body {
+  background-color: var(--clr-primary);
+}
